@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { ZoomIn, ZoomOut, MapPin, Globe, HelpCircle, BarChart2, Layers, Bookmark } from 'lucide-react';
+import { ZoomIn, ZoomOut, MapPin, HelpCircle, BarChart2, Layers, Bookmark } from 'lucide-react';
+import { LogoImg } from '@/components/LogoImg';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -119,12 +120,12 @@ export const SatelliteViewer = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <Globe className="h-5 w-5 text-primary-foreground" />
+          <div className="w-16 h-16 rounded-lg flex items-center justify-center">
+            <LogoImg className="h-16 w-16" />
           </div>
           <div>
             <h1 className="font-display text-xl">Pinpoint</h1>
-            <p className="text-xs text-muted-foreground">Where in the world?</p>
+            <p className="text-xs text-muted-foreground">Guess the Location</p>
           </div>
         </div>
         
@@ -242,7 +243,7 @@ export const SatelliteViewer = ({
         
         {/* Crosshair */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-[1000]">
-          <div className="w-10 h-10 rounded-full border-2 border-primary/50" />
+          <div className="w-12 h-12 rounded-full border-2 border-primary/50" />
           <div className="absolute w-1 h-1 rounded-full bg-primary" />
         </div>
       </div>

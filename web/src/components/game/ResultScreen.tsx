@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ZoomOut, Target, RotateCcw, Globe, BarChart3, Bookmark, BookmarkCheck, Crosshair } from 'lucide-react';
+import { ZoomOut, Target, RotateCcw, BarChart3, Bookmark, BookmarkCheck, Crosshair } from 'lucide-react';
+import { LogoImg } from '@/components/LogoImg';
 import { Button } from '@/components/ui/button';
 import { WorldMap } from './WorldMap';
 import { Puzzle } from '@/lib/gameData';
@@ -97,7 +98,7 @@ export const ResultScreen = ({
       >
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-            <Globe className="h-5 w-5 text-accent-foreground" />
+            <LogoImg className="h-12 w-12" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="font-medium text-foreground">

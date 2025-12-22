@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Globe, Target, MapPin, Map, Trash2, Trophy, Building2, Flag, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getStats, getResults, getTopCountriesByAccuracy, getTopCountries, getContinentDistribution, clearAllStats, getUniqueCities } from '@/lib/statsManager';
 import { Progress } from '@/components/ui/progress';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { ArrowLeft, ZoomOut, Map, Flag, Trash2, MapPin } from 'lucide-react';
+import { LogoImg } from '@/components/LogoImg';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,9 +56,7 @@ const StatsPage = () => {
             </Button>
           </Link>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-              <Globe className="h-5 w-5 text-primary-foreground" />
-            </div>
+            <LogoImg className="h-12 w-12" />
             <h1 className="font-display text-2xl">Statistics</h1>
           </div>
           <div className="flex items-center gap-2">

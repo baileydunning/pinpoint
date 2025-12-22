@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, MapPin, Trash2, Layers, Globe, Map } from 'lucide-react';
+import { ArrowLeft, MapPin, Trash2, Layers, Map } from 'lucide-react';
+import { LogoImg } from '@/components/LogoImg';
 import { Button } from '@/components/ui/button';
 import { getSavedMaps, deleteMap, SavedMap } from '@/lib/savedMaps';
 import L from 'leaflet';
@@ -158,9 +159,7 @@ const Collection = () => {
           </Button>
         </Link>
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <Globe className="h-4 w-4 text-primary-foreground" />
-          </div>
+          <LogoImg className="h-12 w-12" />
           <h1 className="font-display text-xl">Collection</h1>
         </div>
         <div className="flex items-center gap-2" style={{ position: 'relative', zIndex: 20 }}>

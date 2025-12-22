@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Play, BarChart2, Info, Globe } from 'lucide-react';
+import { MapPin, Play, BarChart2, Info } from 'lucide-react';
+import { LogoImg } from '@/components/LogoImg';
 import { Button } from '@/components/ui/button';
 import { StatsPanel } from './StatsPanel';
 import { getStats } from '@/lib/statsManager';
@@ -112,7 +113,7 @@ export const MenuScreen = ({ onStart }: MenuScreenProps) => {
                 Stats
               </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate('/collection')} className="gap-2">
-                <Globe className="h-4 w-4" />
+                <LogoImg />
                 Collection {savedMaps.length > 0 && `(${savedMaps.length})`}
               </Button>
               <Button variant="ghost" size="sm" onClick={() => setShowAbout(true)} className="gap-2">

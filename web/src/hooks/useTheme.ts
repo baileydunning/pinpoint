@@ -1,35 +1,3 @@
-import { useState, useEffect } from 'react';
+import { useThemeContext } from './ThemeProvider';
 
-type Theme = 'light' | 'dark';
-
-export const useTheme = () => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('theme') as Theme;
-      if (stored) return stored;
-      // Check if matchMedia is available
-      if (window.matchMedia) {
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
-      // If no system settings, default to dark
-      return 'dark';
-    }
-    return 'dark';
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
-
-  return { theme, setTheme, toggleTheme };
-};
+export const useTheme = () => useThemeContext();

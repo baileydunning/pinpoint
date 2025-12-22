@@ -4,20 +4,20 @@ import { useGame } from '@/hooks/useGame';
 import { SatelliteViewer } from '@/components/game/SatelliteViewer';
 import { WorldMap } from '@/components/game/WorldMap';
 import { ResultScreen } from '@/components/game/ResultScreen';
-import { Globe } from 'lucide-react';
+import { LogoImg } from '@/components/LogoImg';
 
 const Index = () => {
   const { state, actions, constants } = useGame();
 
   if (!state.puzzle) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="text-center"
         >
-          <Globe className="h-12 w-12 mx-auto text-primary mb-4 animate-pulse" />
+          <LogoImg className="h-26 w-26 mx-auto mb-4 animate-pulse" />
           <p className="text-muted-foreground">Loading...</p>
         </motion.div>
       </div>
