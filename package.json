@@ -1,0 +1,12 @@
+{
+  "name": "harper",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "resources.js",
+  "scripts": {
+    "dev": "harperdb run ."
+  },
+  "author": "",
+  "license": "ISC"
+}

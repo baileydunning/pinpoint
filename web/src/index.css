@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "leaflet/dist/leaflet.css";
+
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/500.css";
+@import "@fontsource/playfair-display/600.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/dm-sans/400.css";
+@import "@fontsource/dm-sans/500.css";
+@import "@fontsource/dm-sans/600.css";
+
+/* Pinpoint Design System - Subtle Blues */
+
+@layer base {
+  :root {
+    /* Light mode */
+    --background: 220 20% 98%;
+    --foreground: 220 25% 10%;
+
+    --card: 220 15% 96%;
+    --card-foreground: 220 25% 10%;
+
+    --popover: 220 20% 98%;
+    --popover-foreground: 220 25% 10%;
+
+    /* Subtle blue primary */
+    --primary: 220 65% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Soft blue accent */
+    --accent: 210 55% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --secondary: 220 15% 92%;
+    --secondary-foreground: 220 20% 20%;
+
+    --muted: 220 12% 88%;
+    --muted-foreground: 220 10% 45%;
+
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 85%;
+    --input: 220 15% 85%;
+    --ring: 220 65% 50%;
+
+    --radius: 0.5rem;
+
+    /* Custom tokens */
+    --surface-elevated: 220 15% 99%;
+    --surface-sunken: 220 12% 94%;
+    --success: 160 55% 40%;
+    --warning: 45 80% 50%;
+
+    /* Typography */
+    --font-display: "Playfair Display", Georgia, serif;
+    --font-body: "DM Sans", -apple-system, sans-serif;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px hsl(220 25% 10% / 0.06);
+    --shadow-md: 0 4px 12px hsl(220 25% 10% / 0.08);
+    --shadow-lg: 0 8px 24px hsl(220 25% 10% / 0.1);
+
+    --sidebar-background: 220 15% 96%;
+    --sidebar-foreground: 220 25% 10%;
+    --sidebar-primary: 220 65% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 15% 92%;
+    --sidebar-accent-foreground: 220 20% 20%;
+    --sidebar-border: 220 15% 85%;
+    --sidebar-ring: 220 65% 50%;
+  }
+
+  .dark {
+    /* Dark mode */
+    --background: 220 25% 8%;
+    --foreground: 220 15% 95%;
+
+    --card: 220 22% 12%;
+    --card-foreground: 220 15% 95%;
+
+    --popover: 220 25% 10%;
+    --popover-foreground: 220 15% 95%;
+
+    /* Subtle blue primary */
+    --primary: 220 60% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Soft blue accent */
+    --accent: 210 50% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    --secondary: 220 20% 18%;
+    --secondary-foreground: 220 12% 85%;
+
+    --muted: 220 18% 22%;
+    --muted-foreground: 220 10% 55%;
+
+    --destructive: 0 55% 45%;
+    --destructive-foreground: 220 15% 95%;
+
+    --border: 220 18% 22%;
+    --input: 220 18% 22%;
+    --ring: 220 60% 55%;
+
+    --surface-elevated: 220 22% 14%;
+    --surface-sunken: 220 25% 6%;
+    --success: 160 50% 45%;
+    --warning: 45 75% 55%;
+
+    --sidebar-background: 220 22% 12%;
+    --sidebar-foreground: 220 15% 95%;
+    --sidebar-primary: 220 60% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 18%;
+    --sidebar-accent-foreground: 220 12% 85%;
+    --sidebar-border: 220 18% 22%;
+    --sidebar-ring: 220 60% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "ss02";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .text-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  .text-body {
+    font-family: var(--font-body);
+  }
+
+  .surface-elevated {
+    background-color: hsl(var(--surface-elevated));
+    box-shadow: var(--shadow-sm);
+  }
+
+  .surface-sunken {
+    background-color: hsl(var(--surface-sunken));
+  }
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: hsl(200 20% 8%);
+  font-family: var(--font-body);
+}
+
+.leaflet-control-attribution {
+  display: none !important;
+}
