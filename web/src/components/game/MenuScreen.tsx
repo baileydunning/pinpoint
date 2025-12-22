@@ -77,8 +77,7 @@ export const MenuScreen = ({ onStart }: MenuScreenProps) => {
               className="w-full max-w-sm"
             >
               <Button
-                variant="editorial"
-                size="xl"
+                size="lg"
                 onClick={onStart}
                 className="w-full gap-3"
               >
