@@ -24,7 +24,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-type MapLayer = 'satellite' | 'streets' | 'terrain' | 'dark';
+type MapLayer = 'satellite' | 'streets' | 'terrain';
 
 const mapLayers: Record<MapLayer, { name: string; url: string; attribution: string }> = {
   satellite: {
@@ -41,11 +41,6 @@ const mapLayers: Record<MapLayer, { name: string; url: string; attribution: stri
     name: 'Terrain',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
     attribution: 'Tiles &copy; Esri',
-  },
-  dark: {
-    name: 'Dark',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; CartoDB',
   },
 };
 
@@ -168,7 +163,7 @@ const Collection = () => {
           </div>
           <h1 className="font-display text-xl">Collection</h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" style={{ position: 'relative', zIndex: 20 }}>
           <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -177,7 +172,7 @@ const Collection = () => {
                 {mapLayers[layer].name}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" style={{ zIndex: 30 }}>
               <DropdownMenuRadioGroup value={layer} onValueChange={(v) => setLayer(v as MapLayer)}>
                 {Object.entries(mapLayers).map(([key, { name }]) => (
                   <DropdownMenuRadioItem key={key} value={key}>
@@ -259,7 +254,7 @@ const Collection = () => {
 
         {/* Map View */}
         <div className="flex-1 relative">
-          <div ref={mapContainerRef} className="h-full w-full min-h-[50vh]" />
+          <div ref={mapContainerRef} className="h-full w-full min-h-[50vh]" style={{ zIndex: 0 }} />
 
           {/* Selected location info overlay */}
           {selectedMap && (
