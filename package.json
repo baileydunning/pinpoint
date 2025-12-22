@@ -8,5 +8,8 @@
     "dev": "harperdb run ."
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "lucide-react": "^0.562.0"
+  }
 }
