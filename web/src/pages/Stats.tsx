@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { getStats, getResults, getTopCountriesByAccuracy, getTopCountries, getContinentDistribution, clearAllStats, getUniqueCities } from '@/lib/statsManager';
 import { Progress } from '@/components/ui/progress';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { ArrowLeft, ZoomOut, Map, Flag, Trash2, MapPin } from 'lucide-react';
+import { ArrowLeft, ZoomOut, Map, Flag, Trash2, MapPin, Trophy } from 'lucide-react';
 import { LogoImg } from '@/components/LogoImg';
 import {
   AlertDialog,
