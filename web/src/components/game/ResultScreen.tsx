@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ZoomOut, Target, RotateCcw, BarChart3, Bookmark, BookmarkCheck, Crosshair } from 'lucide-react';
@@ -8,6 +8,7 @@ import { WorldMap } from './WorldMap';
 import { Puzzle } from '@/lib/gameData';
 import { reverseGeocodeDetailed, DetailedLocation } from '@/lib/landChecker';
 import { saveMap, isMapSaved } from '@/lib/savedMaps';
+import { countryToContinent } from '@/lib/statsManager';
 
 interface ResultScreenProps {
   puzzle: Puzzle;
@@ -28,6 +29,7 @@ const tierStyles = {
   far: 'bg-muted border-muted-foreground/20 text-muted-foreground',
 };
 
+
 export const ResultScreen = ({
   puzzle,
   guess,
@@ -37,12 +39,14 @@ export const ResultScreen = ({
 }: ResultScreenProps) => {
   const navigate = useNavigate();
   const [location, setLocation] = useState<DetailedLocation | null>(null);
+  const [guessLocation, setGuessLocation] = useState<DetailedLocation | null>(null);
   const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     reverseGeocodeDetailed(puzzle.location.lat, puzzle.location.lng).then(setLocation);
+    reverseGeocodeDetailed(guess.lat, guess.lng).then(setGuessLocation);
     setIsSaved(isMapSaved(puzzle.location.lat, puzzle.location.lng));
-  }, [puzzle.location.lat, puzzle.location.lng]);
+  }, [puzzle.location.lat, puzzle.location.lng, guess.lat, guess.lng]);
 
   const handleSaveMap = () => {
     if (!location) return;
@@ -73,18 +77,37 @@ export const ResultScreen = ({
     return `${Math.abs(lat).toFixed(2)}°${latDir}, ${Math.abs(lng).toFixed(2)}°${lngDir}`;
   };
 
+  // Helper to determine if guess is in same country/continent using mapping
+  const extraBandLabel = useMemo(() => {
+    if (location && guessLocation) {
+      if (location.country && guessLocation.country && location.country === guessLocation.country) {
+        return 'Same Country';
+      } else {
+        const actualContinent = countryToContinent[location.country || ''] || null;
+        const guessContinent = countryToContinent[guessLocation.country || ''] || null;
+        if (actualContinent && guessContinent && actualContinent === guessContinent) {
+          return 'Same Continent';
+        }
+      }
+    }
+    return null;
+  }, [location, guessLocation]);
+
   return (
-    <div className="h-full flex flex-col gap-4 p-4">
+    <div className="h-full flex flex-col gap-4 p-4 max-w-2xl mx-auto w-full sm:gap-6 sm:p-6 md:gap-8 md:p-8 mb-4">
       {/* Result Header */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`text-center p-6 rounded-lg border-2 ${tierStyles[result.distanceBand.tier]}`}
+        className={`text-center p-4 rounded-lg border-2 ${tierStyles[result.distanceBand.tier]} sm:p-6 md:p-8`}
       >
-        <h2 className="font-display text-3xl font-bold mb-1">
+        <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-1 break-words">
           {result.distanceBand.label}
         </h2>
-        <p className="text-sm opacity-80">
+        {extraBandLabel && (
+          <p className="text-xs sm:text-sm mt-2 text-accent-foreground/80 font-medium">{extraBandLabel}</p>
+        )}
+        <p className="text-xs sm:text-sm opacity-80">
           {formatDistance(result.distanceKm)} away
         </p>
       </motion.div>
@@ -94,18 +117,18 @@ export const ResultScreen = ({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="p-4 bg-card rounded-lg border border-border"
+        className="p-3 bg-card rounded-lg border border-border sm:p-4 md:p-6"
       >
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
-            <LogoImg className="h-12 w-12" />
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+            <LogoImg className="h-10 w-10 sm:h-12 sm:w-12" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-medium text-foreground">
+            <p className="font-medium text-foreground text-sm sm:text-base md:text-lg">
               {location?.displayName || 'Loading...'}
             </p>
             {location?.country && location.displayName !== location.country && (
-              <p className="text-sm text-muted-foreground">{location.country}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{location.country}</p>
             )}
             <p className="text-xs text-muted-foreground/70 mt-1">
               {formatCoords(puzzle.location.lat, puzzle.location.lng)}
@@ -119,35 +142,36 @@ export const ResultScreen = ({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="grid grid-cols-3 gap-3"
+        className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3"
       >
-        <div className="bg-card rounded-lg p-4 border border-border">
-          <div className="flex items-center gap-2 text-muted-foreground mb-2">
+        <div className="bg-card rounded-lg p-3 border border-border sm:p-4 md:p-6">
+          <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground mb-1 sm:mb-2">
             <Target className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide">Distance</span>
           </div>
-          <p className="font-display text-xl font-semibold text-foreground">
+          <p className="font-display text-base sm:text-xl font-semibold text-foreground">
             {formatDistance(result.distanceKm)}
           </p>
         </div>
-        
-        <div className="bg-card rounded-lg p-4 border border-border">
-          <div className="flex items-center gap-2 text-muted-foreground mb-2">
+        <div className="bg-card rounded-lg p-3 border border-border sm:p-4 md:p-6">
+          <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground mb-1 sm:mb-2">
             <Crosshair className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide">Your Guess</span>
           </div>
-          <p className="font-display text-sm font-semibold text-foreground">
+          <p className="font-display text-xs sm:text-sm font-semibold text-foreground">
             {formatCoords(guess.lat, guess.lng)}
           </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {guessLocation?.displayName || 'Looking up...'}
+          </p>
         </div>
-        
-        <div className="bg-card rounded-lg p-4 border border-border">
-          <div className="flex items-center gap-2 text-muted-foreground mb-2">
+        <div className="bg-card rounded-lg p-3 border border-border sm:p-4 md:p-6">
+          <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground mb-1 sm:mb-2">
             <ZoomOut className="h-4 w-4" />
             <span className="text-xs uppercase tracking-wide">Zooms</span>
           </div>
-          <p className="font-display text-xl font-semibold text-foreground">
-            {result.zoomUsed}<span className="text-sm font-normal text-muted-foreground">/{maxZoom - 1}</span>
+          <p className="font-display text-base sm:text-xl font-semibold text-foreground">
+            {result.zoomUsed}<span className="text-xs sm:text-sm font-normal text-muted-foreground">/{maxZoom - 1}</span>
           </p>
         </div>
       </motion.div>
@@ -157,7 +181,7 @@ export const ResultScreen = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="flex-1 min-h-[180px] rounded-lg overflow-hidden border border-border"
+        className="flex-1 min-h-[140px] sm:min-h-[180px] rounded-lg overflow-hidden border border-border"
       >
         <WorldMap
           guess={guess}
@@ -177,13 +201,13 @@ export const ResultScreen = ({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="flex gap-3"
+        className="flex flex-col gap-2 sm:flex-row sm:gap-3"
       >
         <Button 
           onClick={handleSaveMap}
           variant={isSaved ? "secondary" : "outline"}
           size="lg" 
-          className="gap-2"
+          className="gap-2 w-full sm:w-auto"
           disabled={isSaved || !location}
         >
           {isSaved ? (
@@ -202,12 +226,12 @@ export const ResultScreen = ({
           onClick={() => navigate('/stats')} 
           variant="outline" 
           size="lg" 
-          className="flex-1 gap-2"
+          className="flex-1 gap-2 w-full sm:w-auto"
         >
           <BarChart3 className="h-4 w-4" />
           Stats
         </Button>
-        <Button onClick={onPlayAgain} size="lg" className="flex-1 gap-2">
+        <Button onClick={onPlayAgain} size="lg" className="flex-1 gap-2 w-full sm:w-auto">
           <RotateCcw className="h-4 w-4" />
           Play Again
         </Button>

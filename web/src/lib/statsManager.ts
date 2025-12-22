@@ -54,7 +54,7 @@ const defaultStats: PlayerStats = {
 };
 
 // Map countries to continents (expanded)
-const countryToContinent: Record<string, string> = {
+export const countryToContinent: Record<string, string> = {
   // North America
   'United States': 'North America', 'Canada': 'North America', 'Mexico': 'North America',
   'Guatemala': 'North America', 'Cuba': 'North America', 'Haiti': 'North America',

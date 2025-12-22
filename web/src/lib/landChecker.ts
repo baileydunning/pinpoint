@@ -143,20 +143,15 @@ export async function reverseGeocodeDetailed(lat: number, lng: number): Promise<
                      address.building || address.aeroway || address.military;
     const neighbourhood = address.neighbourhood || address.suburb || address.district;
     
-    // Build display name: prefer landmark or city + state/country format
-    let displayName = country;
-    if (landmark) {
-      displayName = landmark;
-    } else if (city && state) {
-      displayName = `${city}, ${state}`;
-    } else if (city) {
-      displayName = `${city}, ${country}`;
-    } else if (neighbourhood && state) {
-      displayName = `${neighbourhood}, ${state}`;
-    } else if (state) {
-      displayName = `${state}, ${country}`;
-    }
-    
+    // Build display name: show everything available in order: landmark, neighbourhood, city, state, country
+    const parts: string[] = [];
+    if (landmark) parts.push(landmark);
+    if (neighbourhood && !parts.includes(neighbourhood)) parts.push(neighbourhood);
+    if (city && !parts.includes(city)) parts.push(city);
+    if (state && !parts.includes(state)) parts.push(state);
+    if (country && !parts.includes(country)) parts.push(country);
+    const displayName = parts.join(', ');
+
     return { city, state, country, displayName, landmark, neighbourhood };
   } catch {
     // Fallback to local country-only lookup

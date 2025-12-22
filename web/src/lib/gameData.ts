@@ -56,11 +56,18 @@ export const calculateDistance = (
 
 // Get distance band description
 export const getDistanceBand = (distanceKm: number): { label: string; tier: 'excellent' | 'good' | 'fair' | 'far' } => {
-  if (distanceKm < 50) return { label: 'Pinpoint Accuracy', tier: 'excellent' };
+  if (distanceKm < 25) return { label: 'Pinpoint Accuracy', tier: 'excellent' };
+  if (distanceKm < 75) return { label: 'Incredible!', tier: 'excellent' };
   if (distanceKm < 200) return { label: 'Very Close', tier: 'excellent' };
-  if (distanceKm < 500) return { label: 'Close', tier: 'good' };
-  if (distanceKm < 1000) return { label: 'Same Region', tier: 'good' };
-  if (distanceKm < 2000) return { label: 'Same Continent', tier: 'fair' };
-  if (distanceKm < 5000) return { label: 'Far', tier: 'far' };
-  return { label: 'Very Far', tier: 'far' };
+  if (distanceKm < 400) return { label: 'Close', tier: 'good' };
+  if (distanceKm < 700) return { label: 'Nearby', tier: 'good' };
+  if (distanceKm < 1200) return { label: 'Regional', tier: 'good' };
+  if (distanceKm < 2000) return { label: 'Distant', tier: 'fair' };
+  if (distanceKm < 3000) return { label: 'Farther Away', tier: 'fair' };
+  if (distanceKm < 4500) return { label: 'Very Distant', tier: 'fair' };
+  if (distanceKm < 6000) return { label: 'Long Haul', tier: 'far' };
+  if (distanceKm < 8000) return { label: 'Far Away', tier: 'far' };
+  if (distanceKm < 10000) return { label: 'Very Far', tier: 'far' };
+  if (distanceKm < 14000) return { label: 'Other Side of the World', tier: 'far' };
+  return { label: 'Furthest Possible', tier: 'far' };
 };
