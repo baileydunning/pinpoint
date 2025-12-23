@@ -94,7 +94,7 @@ export const ResultScreen = ({
   }, [location, guessLocation]);
 
   return (
-    <div className="h-full flex flex-col gap-4 p-4 max-w-2xl mx-auto w-full sm:gap-6 sm:p-6 md:gap-8 md:p-8 mb-4">
+    <div className="h-full flex flex-col gap-4 p-4 max-w-2xl mx-auto w-full sm:gap-6 sm:p-6 md:gap-8 md:p-8 mb-8 pb-8">
       {/* Result Header */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -105,7 +105,7 @@ export const ResultScreen = ({
           {result.distanceBand.label}
         </h2>
         {extraBandLabel && (
-          <p className="text-xs sm:text-sm mt-2 text-accent-foreground/80 font-medium">{extraBandLabel}</p>
+          <p className="text-xs sm:text-sm mt-2 text-foreground font-medium">{extraBandLabel}</p>
         )}
         <p className="text-xs sm:text-sm opacity-80">
           {formatDistance(result.distanceKm)} away
