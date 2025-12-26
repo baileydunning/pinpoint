@@ -4,5 +4,5 @@ graphqlSchema:
   files: "schema.graphql"
 
 static:
-  files: 'web/dist/**/*""`
+  files: "web/dist/**/*"
   urlPath: "/"
