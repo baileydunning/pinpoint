@@ -58,7 +58,7 @@ export async function postHighScore(result: DailyResult): Promise<HighScoreRow> 
     guessDisplayName: (result as any).guessDisplayName ?? null,
   };
 
-  const res = await fetch('/high_scores/', {
+  const res = await fetch('/HighScores/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(payload),
@@ -66,7 +66,7 @@ export async function postHighScore(result: DailyResult): Promise<HighScoreRow> 
 
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`POST /high_scores failed (${res.status}) ${text}`);
+    throw new Error(`POST /HighScores failed (${res.status}) ${text}`);
   }
 
   const data = await res.json().catch(() => null);
@@ -111,7 +111,7 @@ function toNumber(v: number | string): number {
 }
 
 async function fetchAllHighScores(): Promise<HighScoreRow[]> {
-  const url = '/high_scores/';
+  const url = '/HighScores/';
 
   const res = (await Promise.race([
     fetch(url, { method: 'GET', headers: { Accept: 'application/json' } }),

@@ -1,5 +1,8 @@
 rest: true
 
+jsResource:
+  files: 'resources.js'
+
 graphqlSchema:
   files: "schema.graphql"
 
