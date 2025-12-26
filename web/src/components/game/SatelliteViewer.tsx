@@ -1,7 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { ZoomIn, ZoomOut, MapPin, HelpCircle, BarChart2, Layers, Bookmark, Calendar, Trophy, CheckCircle, Clock } from 'lucide-react';
+import {
+  ZoomIn,
+  ZoomOut,
+  MapPin,
+  HelpCircle,
+  BarChart2,
+  Layers,
+  Bookmark,
+  Calendar,
+  Trophy,
+  Clock,
+  Menu,
+} from 'lucide-react';
 import { LogoImg } from '@/components/LogoImg';
 import { getTimeUntilNextPuzzle } from '@/lib/dailyPuzzle';
 import { Button } from '@/components/ui/button';
@@ -69,6 +81,7 @@ export const SatelliteViewer = ({
   const [showHelp, setShowHelp] = useState(false);
   const [mapStyleState, setMapStyle] = useState<MapStyle>('satellite');
   const [countdown, setCountdown] = useState(getTimeUntilNextPuzzle());
+
   // Fallback to 'satellite' if stored style no longer exists (e.g., after HMR)
   const mapStyle: MapStyle = mapStyles[mapStyleState] ? mapStyleState : 'satellite';
 
@@ -134,7 +147,7 @@ export const SatelliteViewer = ({
   const handleDailyClick = async () => {
     if (dailyCompleted) {
       toast.info("You've already completed today's challenge!", {
-        description: "Come back tomorrow for a new puzzle.",
+        description: 'Come back tomorrow for a new puzzle.',
       });
       return;
     }
@@ -160,8 +173,92 @@ export const SatelliteViewer = ({
             </p>
           </div>
         </div>
-        
-        <div className="flex items-center gap-2">
+
+        {/* Hamburger menu for mobile only */}
+        <div className="flex items-center gap-2 md:hidden">
+          {gameMode === 'practice' && onStartDaily && (
+            dailyCompleted ? (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted px-3 py-2 rounded-md">
+                <Clock className="h-4 w-4" />
+                <span className="font-mono">
+                  {countdown.hours.toString().padStart(2, '0')}:
+                  {countdown.minutes.toString().padStart(2, '0')}:
+                  {countdown.seconds.toString().padStart(2, '0')}
+                </span>
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDailyClick}
+                className="gap-2 border-primary/50 hover:bg-primary/10 hidden md:flex"
+              >
+                <Calendar className="h-4 w-4" />
+                <span className="hidden sm:inline">Daily Challenge</span>
+              </Button>
+            )
+          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowHelp(true)}
+            className="h-9 w-9"
+            aria-label="How to play"
+          >
+            <HelpCircle className="h-5 w-5" />
+          </Button>
+
+          {/* Compact dropdown menu (instead of full-screen drawer) */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10"
+                aria-label="Open menu"
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="end"
+              sideOffset={8}
+              className="w-56 rounded-xl border border-border bg-popover p-2 shadow-lg z-[99999]"
+            >
+              <div className="px-2 py-1.5">
+                <p className="text-xs font-semibold text-muted-foreground">Menu</p>
+              </div>
+              <div className="my-1 h-px bg-border" />
+
+              <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                <Link to="/highscores" className="flex items-center gap-3 py-2">
+                  <Trophy className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">High Scores</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                <Link to="/collection" className="flex items-center gap-3 py-2">
+                  <Bookmark className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">Collection</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                <Link to="/stats" className="flex items-center gap-3 py-2">
+                  <BarChart2 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">Stats</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <ThemeToggle />
+        </div>
+
+        {/* Existing icon menu for md and up */}
+        <div className="hidden md:flex items-center gap-2">
           {/* Daily Challenge Button */}
           {gameMode === 'practice' && onStartDaily && (
             dailyCompleted ? (
@@ -178,14 +275,13 @@ export const SatelliteViewer = ({
                 variant="outline"
                 size="sm"
                 onClick={handleDailyClick}
-                className="gap-2 border-primary/50 hover:bg-primary/10"
+                className="gap-2 border-primary/50 hover:bg-primary/10 hidden md:flex"
               >
                 <Calendar className="h-4 w-4" />
                 <span className="hidden sm:inline">Daily Challenge</span>
               </Button>
             )
           )}
-          
           <Button
             variant="ghost"
             size="icon"
@@ -229,7 +325,7 @@ export const SatelliteViewer = ({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               className="bg-background rounded-lg p-6 max-w-md w-full border border-border shadow-lg"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <h2 className="font-display text-2xl mb-4">How to Play</h2>
               <div className="space-y-4 text-sm text-muted-foreground">
@@ -239,7 +335,10 @@ export const SatelliteViewer = ({
                 </div>
                 <div>
                   <h3 className="font-medium text-foreground mb-1">Zoom Out</h3>
-                  <p>Use the zoom controls to reveal more context. You have {maxZoomSteps - 1} zoom levels available.</p>
+                  <p>
+                    Use the zoom controls to reveal more context. You have {maxZoomSteps - 1} zoom levels
+                    available.
+                  </p>
                 </div>
                 <div>
                   <h3 className="font-medium text-foreground mb-1">Place Your Pin</h3>
@@ -247,7 +346,9 @@ export const SatelliteViewer = ({
                 </div>
                 <div>
                   <h3 className="font-medium text-foreground mb-1">Results</h3>
-                  <p>See how close you got. The less zoom you use, the more impressive your guess.</p>
+                  <p>
+                    See how close you got. The less zoom you use, the more impressive your guess.
+                  </p>
                 </div>
               </div>
               <Button onClick={() => setShowHelp(false)} className="w-full mt-6">
@@ -261,7 +362,7 @@ export const SatelliteViewer = ({
       {/* Satellite Map Container */}
       <div className="relative flex-1 bg-foreground/5 overflow-hidden rounded-lg border border-border">
         <div ref={containerRef} className="w-full h-full" />
-        
+
         {/* Zoom indicator */}
         <div className="absolute top-3 left-3 bg-background/95 backdrop-blur-sm rounded px-3 py-2 border border-border z-[1000]">
           <div className="flex items-center gap-2">
@@ -283,7 +384,11 @@ export const SatelliteViewer = ({
         <div className="absolute top-3 right-3 z-[1001]">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="sm" className="gap-2 bg-background backdrop-blur-sm border border-border">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="gap-2 bg-background backdrop-blur-sm border border-border"
+              >
                 <Layers className="h-4 w-4" />
                 <span className="hidden sm:inline">{mapStyles[mapStyle].name}</span>
               </Button>
@@ -301,14 +406,14 @@ export const SatelliteViewer = ({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        
+
         {/* Crosshair */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-[1000]">
           <div className="w-10 h-10 rounded-full border-2 border-primary/50" />
           <div className="absolute w-1 h-1 rounded-full bg-primary" />
         </div>
       </div>
-      
+
       {/* Controls */}
       <div className="flex items-center justify-between gap-4 bg-card rounded-lg p-4 border border-border">
         <div className="flex items-center gap-3">
@@ -334,17 +439,19 @@ export const SatelliteViewer = ({
               <ZoomOut className="h-4 w-4" />
             </Button>
           </div>
-          
+
           <div className="hidden sm:block">
             <p className="text-sm font-medium">
               {zoomStep === 0 ? 'Closest view' : `${zoomStep}x zoomed out`}
             </p>
             <p className="text-xs text-muted-foreground">
-              {zoomsRemaining > 0 ? `${zoomsRemaining} zoom${zoomsRemaining !== 1 ? 's' : ''} remaining` : 'Max zoom reached'}
+              {zoomsRemaining > 0
+                ? `${zoomsRemaining} zoom${zoomsRemaining !== 1 ? 's' : ''} remaining`
+                : 'Max zoom reached'}
             </p>
           </div>
         </div>
-        
+
         <Button onClick={onPlacePin} className="gap-2">
           <MapPin className="h-4 w-4" />
           Place Pin

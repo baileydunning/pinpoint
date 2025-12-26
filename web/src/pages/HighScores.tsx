@@ -385,7 +385,7 @@ const HighScores = () => {
                         <div className="flex items-center gap-2">
                           <Lock className="h-4 w-4 opacity-70" />
                           <span>
-                            You haven’t played {isToday ? "today’s" : 'this'} puzzle yet.
+                            {isToday ? "You haven't played today’s puzzle yet." : "You did not play this day’s puzzle."}
                           </span>
                         </div>
                       </div>
@@ -434,9 +434,6 @@ const HighScores = () => {
                                 <div className="min-w-0">
                                   <span className={`font-medium ${isCurrentUser ? 'text-primary' : ''}`}>
                                     {result.playerName}
-                                    {isCurrentUser && (
-                                      <span className="text-xs ml-1 opacity-70">(You)</span>
-                                    )}
                                   </span>
 
                                   {((isPlayedByUser || !isToday) && guessedLoc) && (
