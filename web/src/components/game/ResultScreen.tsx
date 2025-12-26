@@ -29,7 +29,6 @@ const tierStyles = {
   far: 'bg-muted border-muted-foreground/20 text-muted-foreground',
 };
 
-
 export const ResultScreen = ({
   puzzle,
   guess,
@@ -196,45 +195,65 @@ export const ResultScreen = ({
         />
       </motion.div>
       
-      {/* Actions */}
+      {/* Actions & Navigation */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="flex flex-col gap-2 sm:flex-row sm:gap-3"
+        className="flex flex-col gap-2 sm:gap-3 mt-2"
       >
-        <Button 
-          onClick={handleSaveMap}
-          variant={isSaved ? "secondary" : "outline"}
-          size="lg" 
-          className="gap-2 w-full sm:w-auto"
-          disabled={isSaved || !location}
-        >
-          {isSaved ? (
-            <>
-              <BookmarkCheck className="h-4 w-4" />
-              Saved
-            </>
-          ) : (
-            <>
-              <Bookmark className="h-4 w-4" />
-              Save
-            </>
-          )}
-        </Button>
-        <Button 
-          onClick={() => navigate('/stats')} 
-          variant="outline" 
-          size="lg" 
-          className="flex-1 gap-2 w-full sm:w-auto"
-        >
-          <BarChart3 className="h-4 w-4" />
-          Stats
-        </Button>
-        <Button onClick={onPlayAgain} size="lg" className="flex-1 gap-2 w-full sm:w-auto">
-          <RotateCcw className="h-4 w-4" />
-          Play Again
-        </Button>
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 justify-center">
+          <Button 
+            onClick={handleSaveMap}
+            variant={isSaved ? "secondary" : "outline"}
+            size="lg"
+            className="gap-2 flex-1 min-w-[140px]"
+            disabled={isSaved || !location}
+          >
+            {isSaved ? (
+              <>
+                <BookmarkCheck className="h-4 w-4" />
+                Saved
+              </>
+            ) : (
+              <>
+                <Bookmark className="h-4 w-4" />
+                Save
+              </>
+            )}
+          </Button>
+          <Button 
+            onClick={() => navigate('/stats')} 
+            variant="outline" 
+            size="lg" 
+            className="gap-2 flex-1 min-w-[140px]"
+          >
+            <BarChart3 className="h-4 w-4" />
+            Stats
+          </Button>
+          <Button onClick={onPlayAgain} size="lg" className="gap-2 flex-1 min-w-[140px]">
+            <RotateCcw className="h-4 w-4" />
+            Play Again
+          </Button>
+        </div>
+        <div className="flex flex-row gap-2 sm:gap-3 justify-center">
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="gap-2 flex-1 min-w-[140px]"
+            onClick={() => navigate('/highscores')}
+          >
+            View High Scores
+          </Button>
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="gap-2 flex-1 min-w-[140px]"
+            onClick={() => navigate('/collection')}
+          >
+            Saved Places
+          </Button>
+        </div>
       </motion.div>
     </div>
   );

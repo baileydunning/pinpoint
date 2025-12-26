@@ -9,8 +9,9 @@ import Index from "./pages/Index";
 import Stats from "./pages/Stats";
 import NotFound from "./pages/NotFound";
 
-// Lazy load Collection (keeps initial bundle small)
+// Lazy load pages
 const Collection = lazy(() => import("./pages/Collection"));
+const HighScores = lazy(() => import("./pages/HighScores"));
 
 const App = () => (
   <HelmetProvider>
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/stats" element={<Stats />} />
               <Route path="/collection" element={<Collection />} />
+              <Route path="/highscores" element={<HighScores />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

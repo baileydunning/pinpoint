@@ -4,21 +4,38 @@ import { useGame } from '@/hooks/useGame';
 import { SatelliteViewer } from '@/components/game/SatelliteViewer';
 import { WorldMap } from '@/components/game/WorldMap';
 import { ResultScreen } from '@/components/game/ResultScreen';
+import { NameInput } from '@/components/game/NameInput';
 import { LogoImg } from '@/components/LogoImg';
 
 const Index = () => {
   const { state, actions, constants } = useGame();
 
+  // Name input screen (for daily challenge)
+  if (state.phase === 'name-input') {
+    return (
+      <>
+        <Helmet>
+          <title>Enter Your Name - Pinpoint</title>
+        </Helmet>
+        <NameInput
+          onSubmit={actions.continueAfterName}
+          onCancel={actions.cancelNameInput}
+        />
+      </>
+    );
+  }
+
+  // Loading state
   if (!state.puzzle) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="text-center"
         >
-          <LogoImg className="h-26 w-26 mx-auto mb-4 animate-pulse" />
-          <p className="text-muted-foreground">Loading...</p>
+          <LogoImg className="h-30 w-30 mx-auto text-primary mb-4 animate-pulse" />
+          <p className="text-muted-foreground">Loading puzzle...</p>
         </motion.div>
       </div>
     );
@@ -54,6 +71,9 @@ const Index = () => {
                   onZoomIn={actions.zoomIn}
                   onZoomOut={actions.zoomOut}
                   onPlacePin={actions.openMap}
+                  gameMode={state.mode}
+                  dailyCompleted={state.dailyCompleted}
+                  onStartDaily={actions.startDailyGame}
                 />
               </div>
             </motion.div>

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { ZoomIn, ZoomOut, MapPin, HelpCircle, BarChart2, Layers, Bookmark } from 'lucide-react';
+import { ZoomIn, ZoomOut, MapPin, HelpCircle, BarChart2, Layers, Bookmark, Calendar, Trophy, CheckCircle, Clock } from 'lucide-react';
 import { LogoImg } from '@/components/LogoImg';
+import { getTimeUntilNextPuzzle } from '@/lib/dailyPuzzle';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -13,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
 
 interface SatelliteViewerProps {
   lat: number;
@@ -23,6 +25,9 @@ interface SatelliteViewerProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onPlacePin: () => void;
+  gameMode?: 'daily' | 'practice';
+  dailyCompleted?: boolean;
+  onStartDaily?: () => Promise<boolean | void>;
 }
 
 type MapStyle = 'satellite' | 'physical' | 'relief';
@@ -54,14 +59,27 @@ export const SatelliteViewer = ({
   onZoomIn,
   onZoomOut,
   onPlacePin,
+  gameMode = 'practice',
+  dailyCompleted = false,
+  onStartDaily,
 }: SatelliteViewerProps) => {
   const mapRef = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showHelp, setShowHelp] = useState(false);
   const [mapStyleState, setMapStyle] = useState<MapStyle>('satellite');
+  const [countdown, setCountdown] = useState(getTimeUntilNextPuzzle());
   // Fallback to 'satellite' if stored style no longer exists (e.g., after HMR)
   const mapStyle: MapStyle = mapStyles[mapStyleState] ? mapStyleState : 'satellite';
+
+  // Update countdown every second when daily is completed
+  useEffect(() => {
+    if (!dailyCompleted) return;
+    const interval = setInterval(() => {
+      setCountdown(getTimeUntilNextPuzzle());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [dailyCompleted]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -113,6 +131,18 @@ export const SatelliteViewer = ({
     };
   }, []);
 
+  const handleDailyClick = async () => {
+    if (dailyCompleted) {
+      toast.info("You've already completed today's challenge!", {
+        description: "Come back tomorrow for a new puzzle.",
+      });
+      return;
+    }
+    if (onStartDaily) {
+      await onStartDaily();
+    }
+  };
+
   const zoomsRemaining = maxZoomSteps - 1 - zoomStep;
 
   return (
@@ -120,16 +150,42 @@ export const SatelliteViewer = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-16 h-16 rounded-lg flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <LogoImg className="h-16 w-16" />
           </div>
           <div>
             <h1 className="font-display text-xl">Pinpoint</h1>
-            <p className="text-xs text-muted-foreground">Guess the Location</p>
+            <p className="text-xs text-muted-foreground">
+              {gameMode === 'daily' ? 'Daily Challenge' : 'Guess The Location'}
+            </p>
           </div>
         </div>
         
         <div className="flex items-center gap-2">
+          {/* Daily Challenge Button */}
+          {gameMode === 'practice' && onStartDaily && (
+            dailyCompleted ? (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted px-3 py-2 rounded-md">
+                <Clock className="h-4 w-4" />
+                <span className="font-mono">
+                  {countdown.hours.toString().padStart(2, '0')}:
+                  {countdown.minutes.toString().padStart(2, '0')}:
+                  {countdown.seconds.toString().padStart(2, '0')}
+                </span>
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDailyClick}
+                className="gap-2 border-primary/50 hover:bg-primary/10"
+              >
+                <Calendar className="h-4 w-4" />
+                <span className="hidden sm:inline">Daily Challenge</span>
+              </Button>
+            )
+          )}
+          
           <Button
             variant="ghost"
             size="icon"
@@ -139,6 +195,11 @@ export const SatelliteViewer = ({
           >
             <HelpCircle className="h-5 w-5" />
           </Button>
+          <Link to="/highscores">
+            <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="High Scores">
+              <Trophy className="h-5 w-5" />
+            </Button>
+          </Link>
           <Link to="/collection">
             <Button variant="ghost" size="icon" className="h-9 w-9" aria-label="Collection">
               <Bookmark className="h-5 w-5" />
@@ -243,7 +304,7 @@ export const SatelliteViewer = ({
         
         {/* Crosshair */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-[1000]">
-          <div className="w-12 h-12 rounded-full border-2 border-primary/50" />
+          <div className="w-10 h-10 rounded-full border-2 border-primary/50" />
           <div className="absolute w-1 h-1 rounded-full bg-primary" />
         </div>
       </div>

@@ -1,0 +1,21 @@
+type HighScores @table(database: "data") @export(name: "high_scores") {
+  id: ID! @primaryKey
+  date: String! @indexed
+
+  playerName: String! @indexed
+  distanceKm: Float! @indexed
+  zoomLevel: Int!
+
+  guessLat: Float!
+  guessLng: Float!
+  actualLat: Float!
+  actualLng: Float!
+  guessCity: String
+  guessState: String
+  guessCountry: String
+  guessDisplayName: String
+  country: String @indexed
+  city: String @indexed
+  actualDisplayName: String
+  actualState: String
+}

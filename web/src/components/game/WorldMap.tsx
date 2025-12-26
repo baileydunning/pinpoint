@@ -90,6 +90,7 @@ export const WorldMap = memo(({
     coordinates: [0, 20],
     zoom: 1,
   });
+  const [submitting, setSubmitting] = useState(false);
 
   const handleMoveEnd = useCallback((pos: { coordinates: [number, number]; zoom: number }) => {
     setPosition(pos);
@@ -98,6 +99,15 @@ export const WorldMap = memo(({
   const clearGuess = useCallback(() => {
     onPlacePin(0, 0);
   }, [onPlacePin]);
+
+  const handleSubmit = useCallback(async () => {
+    setSubmitting(true);
+    try {
+      await onSubmit();
+    } finally {
+      setSubmitting(false);
+    }
+  }, [onSubmit]);
 
   return (
     <div className="flex flex-col h-full gap-4">
@@ -206,9 +216,9 @@ export const WorldMap = memo(({
       {/* Submit Button */}
       {guess && guess.lat !== 0 && !showResult && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <Button size="lg" onClick={onSubmit} className="w-full gap-2">
+          <Button size="lg" onClick={handleSubmit} className="w-full gap-2" disabled={submitting}>
             <Check className="h-4 w-4" />
-            Confirm Location
+            {submitting ? 'Submitting...' : 'Confirm Location'}
           </Button>
         </motion.div>
       )}

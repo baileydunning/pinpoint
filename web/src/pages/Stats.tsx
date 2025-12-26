@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { ArrowLeft, Target, MapPin, Map, Trash2, Trophy, Flag, ZoomOut, Calendar, Flame } from 'lucide-react';
+import { LogoImg } from '@/components/LogoImg';
 import { Button } from '@/components/ui/button';
 import { getStats, getResults, getTopCountriesByAccuracy, getTopCountries, getContinentDistribution, clearAllStats, getUniqueCities } from '@/lib/statsManager';
+import { getDailyResults, getDailyStreak } from '@/lib/dailyPuzzle';
 import { Progress } from '@/components/ui/progress';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { ArrowLeft, ZoomOut, Map, Flag, Trash2, MapPin, Trophy } from 'lucide-react';
-import { LogoImg } from '@/components/LogoImg';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,6 +29,13 @@ const StatsPage = () => {
   const continents = getContinentDistribution(stats);
   const uniqueCountries = Object.keys(stats.countriesVisited).length;
   const uniqueCities = getUniqueCities(results);
+  
+  // Daily challenge stats
+  const dailyResults = getDailyResults();
+  const dailyStreak = getDailyStreak();
+  const bestDailyDistance = dailyResults.length > 0 
+    ? Math.min(...dailyResults.map(r => r.distanceKm)) 
+    : 0;
 
   const formatDistance = (km: number) => {
     if (!isFinite(km) || km === 0) return '—';
@@ -56,7 +64,9 @@ const StatsPage = () => {
             </Button>
           </Link>
           <div className="flex items-center gap-3">
-            <LogoImg className="h-12 w-12" />
+            <div className="flex items-center justify-center">
+              <LogoImg className="h-16 w-16" />
+            </div>
             <h1 className="font-display text-2xl">Statistics</h1>
           </div>
           <div className="flex items-center gap-2">
@@ -100,10 +110,46 @@ const StatsPage = () => {
           </motion.div>
         ) : (
           <div className="space-y-6">
+            {/* Daily Challenge Stats */}
+            {dailyResults.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-card rounded-lg p-5 border border-primary/20"
+              >
+                <h3 className="font-display text-lg mb-4 flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-primary" />
+                  Daily Challenge
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="bg-background rounded-lg p-3 border border-border">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Completed</p>
+                    <p className="font-display text-2xl">{dailyResults.length}</p>
+                  </div>
+                  <div className="bg-background rounded-lg p-3 border border-border">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                      <Flame className="h-3 w-3" />
+                      Streak
+                    </div>
+                    <p className="font-display text-2xl text-primary">{dailyStreak.current}</p>
+                  </div>
+                  <div className="bg-background rounded-lg p-3 border border-border">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Best Streak</p>
+                    <p className="font-display text-2xl">{dailyStreak.best}</p>
+                  </div>
+                  <div className="bg-background rounded-lg p-3 border border-border">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Best Daily</p>
+                    <p className="font-display text-2xl text-primary">{formatDistance(bestDailyDistance)}</p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {/* Overview - Row 1 */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-3"
             >
               <div className="bg-card rounded-lg p-4 border border-border">
