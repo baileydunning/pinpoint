@@ -191,7 +191,7 @@ export const SatelliteViewer = ({
                 variant="outline"
                 size="sm"
                 onClick={handleDailyClick}
-                className="gap-2 border-primary/50 hover:bg-primary/10 hidden md:flex"
+                className="gap-2 border-primary/50 hover:bg-primary/10"
               >
                 <Calendar className="h-4 w-4" />
                 <span className="hidden sm:inline">Daily Challenge</span>
@@ -230,6 +230,19 @@ export const SatelliteViewer = ({
                 <p className="text-xs font-semibold text-muted-foreground">Menu</p>
               </div>
               <div className="my-1 h-px bg-border" />
+
+              {/* Daily Challenge in mobile menu (practice mode only, not completed) */}
+              {gameMode === 'practice' && onStartDaily && !dailyCompleted && (
+                <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
+                  <button
+                    onClick={handleDailyClick}
+                    className="flex items-center gap-3 py-2 w-full text-left"
+                  >
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">Daily Challenge</span>
+                  </button>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuItem asChild className="cursor-pointer rounded-lg">
                 <Link to="/highscores" className="flex items-center gap-3 py-2">
