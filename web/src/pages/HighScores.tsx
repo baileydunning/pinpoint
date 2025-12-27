@@ -256,21 +256,21 @@ const HighScores = () => {
     const iso = normalizeToIsoDate(dateStr);
     const now = new Date();
     const localToday = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    if (iso === localToday) return 'Today';
-
-    // If this is the most recent leaderboard and today has not been played, still show 'Today'
-    // (so the user always sees 'Today' at the top, even if backend date is off)
-    if (allDates[0] === iso && !hasPlayedDate(iso)) {
-      // If the first leaderboard is for today (or missing), label as Today
-      if (iso === localToday || allDates[0] === localToday) return 'Today';
-    }
-
     const yesterday = new Date(now);
     yesterday.setDate(yesterday.getDate() - 1);
     const localYesterday = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+
+    if (iso === localToday) return 'Today';
     if (iso === localYesterday) return 'Yesterday';
 
-    const d = new Date(iso);
+    // Parse YYYY-MM-DD as local date (not UTC)
+    let d;
+    const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) {
+      d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    } else {
+      d = new Date(iso);
+    }
     return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   };
 
