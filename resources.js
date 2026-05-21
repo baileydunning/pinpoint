@@ -7,4 +7,8 @@ export class high_scores extends HighScoresTable {
     allowRead() {
 	    return true
 	}
+
+    allowCreate() {
+        return true
+    }
 }
