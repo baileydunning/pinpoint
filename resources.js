@@ -1,4 +1,4 @@
-import { tables } from "harperdb";
+import { tables } from "harper";
 
 const HighScoresTable = tables.HighScores
 

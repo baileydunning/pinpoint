@@ -5,7 +5,7 @@
   "type": "module",
   "main": "resources.js",
   "scripts": {
-    "dev": "harperdb run ."
+    "dev": "harper run ."
   },
   "author": "",
   "license": "ISC",
