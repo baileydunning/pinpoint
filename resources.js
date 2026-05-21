@@ -4,11 +4,11 @@ const HighScoresTable = tables.HighScores
 
 export class high_scores extends HighScoresTable {
     static loadAsInstance = false;
-    static allowRead() {
+    allowRead() {
 	    return true
 	}
 
-    static allowCreate() {
+    allowCreate() {
         return true
     }
 }
