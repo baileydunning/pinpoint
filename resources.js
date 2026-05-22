@@ -1,8 +1,6 @@
-import { tables } from "harper";
+import { tables } from "harper"
 
-const HighScoresTable = tables.HighScores
-
-export class high_scores extends HighScoresTable {
+export class high_scores extends tables.HighScores {
     allowRead() {
 	    return true
 	}
